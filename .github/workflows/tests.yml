@@ -1,0 +1,23 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ["8.1", "8.2", "8.3"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo_sqlite, mbstring
+      - run: php -l public/index.php
+      - run: php tests/run.php
+      - name: Seed and smoke-test the real server
+        run: |
+          php bin/seed.php
+          php -S 127.0.0.1:8080 -t public > /dev/null 2>&1 &
+          sleep 2
+          curl -fsS http://127.0.0.1:8080/login | grep -q "Sign in"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/)" = "303"

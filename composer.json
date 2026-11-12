@@ -1,0 +1,9 @@
+{
+  "name": "mahsa2nyayi/flowdesk",
+  "description": "Role-based work-order workflow system in plain modern PHP (PDO, no framework)",
+  "type": "project",
+  "license": "MIT",
+  "require": { "php": ">=8.1", "ext-pdo": "*", "ext-mbstring": "*" },
+  "autoload": { "psr-4": { "FlowDesk\\": "src/" }, "files": ["src/helpers.php"] },
+  "scripts": { "test": "php tests/run.php", "migrate": "php bin/migrate.php", "seed": "php bin/seed.php" }
+}
